@@ -2,31 +2,49 @@
 <html>
 <head>
     <style>
-        body { font-family: sans-serif; padding: 20px; background: #f9f9f9; border-radius: 8px; }
-        input { width: 100%; padding: 10px; margin: 10px 0; border: 1px solid #ddd; border-radius: 4px; box-sizing: border-box; }
-        .result-box { background: #eef2ff; border-left: 4px solid #7b68ee; padding: 15px; margin-top: 10px; }
-        label { font-weight: bold; color: #333; }
-        .hint { font-size: 12px; color: #666; }
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; padding: 20px; background: #ffffff; color: #2f2f2f; }
+        .container { max-width: 400px; margin: auto; border: 1px solid #e0e0e0; padding: 20px; border-radius: 12px; box-shadow: 0 4px 6px rgba(0,0,0,0.05); }
+        label { font-weight: 600; display: block; margin-bottom: 8px; font-size: 14px; }
+        input { width: 100%; padding: 12px; border: 2px solid #edebf0; border-radius: 8px; box-sizing: border-box; outline: none; transition: border-color 0.2s; font-size: 16px; }
+        input:focus { border-color: #7b68ee; }
+        .result-label { margin-top: 20px; color: #666; font-size: 12px; text-transform: uppercase; letter-spacing: 1px; }
+        .result-box { background: #f4f4f9; border-radius: 8px; padding: 15px; margin-top: 5px; border: 1px dashed #7b68ee; display: flex; align-items: center; justify-content: space-between; }
+        #output { font-family: 'Courier New', monospace; font-size: 18px; font-weight: bold; color: #7b68ee; word-break: break-all; }
+        .hint { font-size: 11px; color: #999; margin-top: 15px; line-height: 1.4; }
     </style>
 </head>
 <body>
-    <label>Paste Email or Username:</label>
-    <input type="text" id="userInput" placeholder="e.g. srybkowskitestinglongemail" oninput="formatLogin()">
-    
-    <div class="result-box">
-        <label>Your Login:</label>
-        <div id="output" style="font-family: monospace; font-size: 1.2em; margin-top: 5px;">.\</div>
+    <div class="container">
+        <label>Enter Name or Email</label>
+        <input type="text" id="userInput" placeholder="e.g. srybkowskitesting" oninput="formatLogin()">
+        
+        <div class="result-label">Required Login:</div>
+        <div class="result-box">
+            <span id="output">.\</span>
+        </div>
+        
+        <p class="hint">
+            <strong>Logic:</strong> Truncates name to 13 chars to fit the 20-char limit including <code>_amelco</code>.
+        </p>
     </div>
-    <p class="hint">Note: Logins are capped at 20 characters.</p>
 
     <script>
         function formatLogin() {
             const input = document.getElementById('userInput').value;
-            // Remove email domain if present
+            const suffix = "_amelco";
+            const limit = 20;
+            const maxNameLength = limit - suffix.length; // 13 characters
+
+            // 1. Strip email domain if they paste a full email
             let cleanName = input.split('@')[0];
-            // Trim to 20 characters and add prefix
-            let formatted = ".\\" + cleanName.substring(0, 20);
-            document.getElementById('output').innerText = formatted;
+            
+            // 2. Cut the name at 13 chars
+            let truncatedName = cleanName.substring(0, maxNameLength);
+            
+            // 3. Combine
+            let finalLogin = ".\\" + truncatedName + suffix;
+            
+            document.getElementById('output').innerText = input ? finalLogin : ".\\";
         }
     </script>
 </body>
