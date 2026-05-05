@@ -37,9 +37,7 @@
             transition: border-color 0.2s; 
             font-size: 15px; 
         }
-        input:focus { 
-            border-color: #7b68ee; 
-        }
+        input:focus { border-color: #7b68ee; }
         .result-label { 
             margin-top: 18px; 
             color: #888; 
@@ -53,8 +51,6 @@
             padding: 12px; 
             margin-top: 6px; 
             border: 1px solid #7b68ee; 
-            display: flex; 
-            align-items: center;
         }
         #output { 
             font-family: 'Courier New', monospace; 
@@ -70,11 +66,6 @@
             line-height: 1.4;
             text-align: center;
         }
-        code {
-            background: #eee;
-            padding: 2px 4px;
-            border-radius: 4px;
-        }
     </style>
 </head>
 <body>
@@ -88,8 +79,7 @@
         </div>
         
         <p class="footer-note">
-            Limits name to 13 chars + <code>_amelco</code><br>
-            (Max 20 characters total)
+            Full string (name + _amelco) is cut at 20 characters from the right.
         </p>
     </div>
 
@@ -99,7 +89,6 @@
             const outputField = document.getElementById('output');
             const suffix = "_amelco";
             const limit = 20;
-            const maxNameLength = limit - suffix.length; // Results in 13
 
             let val = inputField.value.trim();
             
@@ -108,16 +97,17 @@
                 return;
             }
 
-            // 1. Remove email domain if it exists
+            // 1. Strip email domain
             let cleanName = val.split('@')[0];
             
-            // 2. Truncate name to 13 characters
-            let truncatedName = cleanName.substring(0, maxNameLength);
+            // 2. Combine name and suffix FIRST
+            let combined = cleanName + suffix;
             
-            // 3. Construct final string: .\ + name + _amelco
-            let finalLogin = ".\\" + truncatedName + suffix;
+            // 3. Cut the result at 20 characters from the start (removes from the right)
+            let finalResult = combined.substring(0, limit);
             
-            outputField.innerText = finalLogin;
+            // 4. Display with prefix
+            outputField.innerText = ".\\" + finalResult;
         }
     </script>
 </body>
